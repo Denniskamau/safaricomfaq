@@ -1,0 +1,14 @@
+{
+  "name": "safaricom-faq",
+  "version": "1.0.0",
+  "description": "\"Implement chatbot to interface with safaricom website frequently asked questions\"",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "JamesNyamu",
+  "license": "ISC",
+  "dependencies": {
+    "botbuilder": "^3.13.1"
+  }
+}
