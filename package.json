@@ -10,5 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "botbuilder": "^3.13.1"
+  },
+  "devDependencies": {
+    "eslint": "^4.16.0"
   }
 }
