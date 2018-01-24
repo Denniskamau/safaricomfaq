@@ -1,13 +1,13 @@
 import * as express from 'express'
-import {injectable, inject} from 'inversify'
 import * as builder from 'botbuilder'
+import {injectable, inject} from 'inversify'
 
 import TYPES from '../types'
 
 import {RegistrableController} from './RegistrableController'
 
 @injectable()
-export class DefaultController implements RegistrableController {
+export class BotController implements RegistrableController {
     private connector
     constructor() {
         this.connector = new builder.ChatConnector({
@@ -17,12 +17,7 @@ export class DefaultController implements RegistrableController {
     }
 
     public register(app: express.Application): void {
-        app.route('/')
-            .get(async(request: express.Request, response: express.Response, next: express.NextFunction) => {
-
-              response.json('OK')
-            })
-
-        app.post('/api/messages')
+        app.route('/api/messages')
+            .post(this.connector.listen())
     }
 }
