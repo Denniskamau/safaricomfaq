@@ -3,8 +3,8 @@ import * as express from 'express'
 import * as bodyParser from 'body-parser'
 import TYPES from './types'
 import container from './inversify.config'
-import {logger} from './util/Logger'
-import {RegistrableController} from './controller/RegistrableController'
+import { logger } from './util/Logger'
+import { RegistrableController } from './controller/RegistrableController'
 
 const app: express.Application = express()
 

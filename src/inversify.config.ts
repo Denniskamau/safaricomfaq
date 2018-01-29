@@ -1,4 +1,4 @@
-import {Container} from 'inversify'
+import { Container } from 'inversify'
 import "reflect-metadata"
 
 import TYPES from './types'
