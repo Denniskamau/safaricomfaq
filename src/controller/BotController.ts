@@ -57,28 +57,47 @@ export class BotController implements RegistrableController {
 		})
 
 		this.bot.dialog('/', [
-			// (session) => {
-			// 	builder.Prompts.text(session, 'What is your name')
-			// },
-			// (session, result, next) => {
-			// 	session.userData.name = result.response
-			// 	next()
-			// },
-			// (session) => {
-			// 	builder.Prompts.text(session, `${session.userData.name}, what is your phone number?`)
-			// },
-			// (session, result, next) => {
-			// 	session.userData.phoneNumber = result.response
-			// 	next()
-			// },
 			(session) => {
-				builder.Prompts.text(session, 'What is the issue you are facing?')
+				builder.Prompts.text(session, 'What is your name')
+			},
+			(session, result, next) => {
+				session.userData.name = result.response
+				next()
+			},
+			(session) => {
+				builder.Prompts.text(session, `${session.userData.name}, what is your phone number?`)
+			},
+			(session, result, next) => {
+				session.userData.phoneNumber = result.response
+				session.replaceDialog('faqQuestions')
+			},
+		])
+
+		this.bot.dialog('faqQuestions', [
+			(session, args) => {
+				if(args && args.reprompt)
+					builder.Prompts.text(session, 'What other inquiries do you have?')
+				else
+					builder.Prompts.text(session, 'What inquiry do you have?')
 			},
 			async (session, result, next) => {
 				const userQueryResponse = await this.getResponse(result.response)
 
 				session.send(`${userQueryResponse}`)
 				next()
+			},
+			(session) => {
+				builder.Prompts.text(session, `Any other question that you have for us ${session.userData.name}`)
+			},
+			(session, result) => {
+				if (result.response === 'yes') {
+					const args = {
+						reprompt: true
+					}
+					session.replaceDialog('faqQuestions', args)
+				} else {
+					session.endDialog(`Thanks ${session.userData.name}, we hope we have been able to be of service.`)
+				}
 			}
 		])
 	}
@@ -97,9 +116,9 @@ export class BotController implements RegistrableController {
 		}
 
 		try {
-			const {data} = await axios(options)
+			const { data } = await axios(options)
 
-			if(data.answers.length > 0) {
+			if (data.answers.length > 0) {
 				return data.answers[0].answer
 			}
 
