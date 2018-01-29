@@ -6,13 +6,13 @@ import {injectable, inject} from 'inversify'
 import TYPES from '../types'
 
 import {RegistrableController} from './RegistrableController'
-import { hostname } from 'os';
+import { hostname } from 'os'
 
 @injectable()
 export class BotController implements RegistrableController {
     private connector
     private bot
-    private instructions = 'Welcome to the "Safom" bot. This will answer all FAQ questions from safaricom website'
+    private instructions = 'Welcome to the *Safom* bot. This will answer all FAQ questions from safaricom website'
     private host = 'https://westus.api.cognitive.microsoft.com/qnamaker/v2.0'
     private endpoint = '/knowledgebases/43b22a33-6cde-49de-98d8-66257bcd6356/generateAnswer'
 
@@ -22,41 +22,7 @@ export class BotController implements RegistrableController {
             appPassword: process.env.MICROSOFT_APP_PASSWORD
         })
 
-        this.bot = new builder.UniversalBot(this.connector, (session) => {
-            const reply = new builder.Message().address(session.message.address)
-
-            const text = session.message.text
-
-            const _name = 'Name:'
-            const _email = 'Email:'
-            const _phoneNumber = 'Phone Number:'
-
-            let name
-            let email
-            let phoneNumber
-
-            if(text.indexOf('Name:') > -1 && text.indexOf('Email:') > -1 && text.indexOf('Phone Number:') > -1) {
-                name = text.substring((text.lastIndexOf('Name:') + _name.length + 1), (text.indexOf('Email:') - 1)).replace(/\'/g,'')  
-                email = text.substring((text.lastIndexOf('Email:') + _email.length + 1), (text.indexOf('Phone Number:') - 1)).replace(/\'/g,'')         
-                phoneNumber = text.substring((text.lastIndexOf('Phone Number:') + _phoneNumber.length + 1)).replace(/\'/g,'')
-                
-                reply.text(`Welcome ${name} - ${phoneNumber}. What inquiry do you have today? Respond with /Q:Some question here`)
-
-                session.send(reply)
-            } else if(text.indexOf('/Q:') > -1) {
-                const question = text.substring((text.lastIndexOf('/Q:') + 3))
-
-                const response = this.getResponse(question)
-
-                reply.text(`${response}. Are you satisfied with the answer?`)
-
-                session.send(reply)
-            } else {
-                reply.text(`You said: ${text}. I didn't quite get that`)
-
-                session.send(reply)
-            }
-        })
+        this.bot = new builder.UniversalBot(this.connector)
 
         this.setupBot()
     }
@@ -83,28 +49,30 @@ export class BotController implements RegistrableController {
                         
                         reply= new builder.Message()
                             .address(activity.address)
-                            .text('Please enter your name, email address and mobile number in this format:\n\nName:\'John Doe\',\n\nEmail:\'john.doe@noone.com\',\n\nPhone Number:\'0722000000\'')
+                            .text('Are you a *Safom* customer')
                         _bot.send(reply)
                     }
                 })
             }
         })
-    }
 
-    private async getResponse(question: string): Promise<string> {
-        const authOptions = {
-            method: 'POST',
-            url: `${this.host}${this.endpoint}`,
-            data: question,
-            headers: {
-              'Content-Type': 'multipart/form-data',
-              'Ocp-Apim-Subscription-Key': '31366e4aba0d45818c2e8d4cb04b6909',
+        this.bot.dialog('/', [
+            (session) => {
+                builder.Prompts.text(session, 'What is your name')
+            },
+            (session, result, next) => {
+                session.userData.name = result.response
+                session.send(`Hello ${session.userData.name}`)
+                next()
+            },
+            (session) => {
+                builder.Prompts.text(session, `${session.userData.name}, what is your phone number?`)
+            },
+            (session, result, next) => {
+                session.userData.phoneNumber = result.response
+                session.send(`${session.userData.name} we can now address your query`)
+                next()
             }
-          }
-      
-          const reply = await axios(authOptions)
-          console.log(reply)
-
-          return reply
+        ])
     }
 }
