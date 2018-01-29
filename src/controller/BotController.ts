@@ -97,13 +97,17 @@ export class BotController implements RegistrableController {
 		}
 
 		try {
-			const reply = await axios(options)
-			console.log(reply, 'reply')
-			
-			return reply
+			const {data} = await axios(options)
+
+			if(data.answers.length > 0) {
+				return data.answers[0].answer
+			}
+
+			return 'I cannot understand what you are saying'
 		} catch (error) {
 			console.log(error.response.data)
-			return ''
+
+			return 'Oops!! An error occured.'
 		}
 	}
 }
