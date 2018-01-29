@@ -75,7 +75,7 @@ export class BotController implements RegistrableController {
 
 		this.bot.dialog('faqQuestions', [
 			(session, args) => {
-				if(args && args.reprompt)
+				if (args && args.reprompt)
 					builder.Prompts.text(session, 'What other inquiries do you have?')
 				else
 					builder.Prompts.text(session, 'What inquiry do you have?')
@@ -87,7 +87,7 @@ export class BotController implements RegistrableController {
 				next()
 			},
 			(session) => {
-				builder.Prompts.text(session, `Any other question that you have for us ${session.userData.name}`)
+				builder.Prompts.confirm(session, `Any other question that you have for us ${session.userData.name}`)
 			},
 			(session, result) => {
 				if (result.response === 'yes') {
