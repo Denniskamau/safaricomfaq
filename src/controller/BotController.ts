@@ -10,7 +10,7 @@ import {RegistrableController} from './RegistrableController'
 export class BotController implements RegistrableController {
     private connector
     private bot
-    private instructions = 'Welcome to the Bot to showcase the DirectLine API. Send text to echo it.';
+    private instructions = 'Welcome to the "Safom" bot. This will answer all FAQ questions from safaricom website'
 
     constructor() {
         this.connector = new builder.ChatConnector({
@@ -21,9 +21,37 @@ export class BotController implements RegistrableController {
         this.bot = new builder.UniversalBot(this.connector, (session) => {
             const reply = new builder.Message().address(session.message.address)
 
-            reply.text(`You said: ${session.message.text}`)
+            const text = session.message.text
 
-            session.send(reply)
+            const _name = 'Name:'
+            const _email = 'Email:'
+            const _phoneNumber = 'Phone Number:'
+
+            let name
+            let email
+            let phoneNumber
+            
+            if(text.indexOf('Name:') > -1 && text.indexOf('Email:') > -1) {
+                name = text.substring((text.lastIndexOf('Name:') + _name.length + 1), (text.indexOf('Email:') - 1)).replace(/\'/g,'')  
+            }
+            
+            if(text.indexOf('Email:') > -1 && text.indexOf('Phone Number:') > -1) {
+                email = text.substring((text.lastIndexOf('Email:') + _email.length + 1), (text.indexOf('Phone Number:') - 1)).replace(/\'/g,'')         
+            }
+            
+            if(text.indexOf('Phone Number:') > -1) {
+                phoneNumber = text.substring((text.lastIndexOf('Phone Number:') + _phoneNumber.length + 1)).replace(/\'/g,'')  
+            }
+
+            if(name && email && phoneNumber) {
+                reply.text(`Welcome ${name} - ${phoneNumber}. What inquiry do you have today?`)
+
+                session.send(reply)
+            } else {
+                reply.text(`You said: ${text}. I didn't quite get that`)
+
+                session.send(reply)
+            }
         })
 
         this.setupBot()
@@ -42,12 +70,19 @@ export class BotController implements RegistrableController {
             if (activity.membersAdded) {
                 activity.membersAdded.forEach(function (identity) {
                     if (identity.id === activity.address.bot.id) {
-                        var reply = new builder.Message()
+                        let reply
+                        
+                        reply= new builder.Message()
                             .address(activity.address)
                             .text(_instructions)
-                        _bot.send(reply);
+                        _bot.send(reply)
+                        
+                        reply= new builder.Message()
+                            .address(activity.address)
+                            .text('Please enter your name, email address and mobile number in this format:\n\nName:\'John Doe\',\n\nEmail:\'john.doe@noone.com\',\n\nPhone Number:\'0722000000\'')
+                        _bot.send(reply)
                     }
-                });
+                })
             }
         })
     }
