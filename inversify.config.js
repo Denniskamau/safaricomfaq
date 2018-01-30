@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const inversify_1 = require("inversify");
+require("reflect-metadata");
+const types_1 = require("./types");
+const DefaultController_1 = require("./controller/DefaultController");
+const BotController_1 = require("./controller/BotController");
+const container = new inversify_1.Container();
+container.bind(types_1.default.Controller).to(DefaultController_1.DefaultController);
+container.bind(types_1.default.Controller).to(BotController_1.BotController);
+exports.default = container;
