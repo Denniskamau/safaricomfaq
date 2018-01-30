@@ -1,6 +1,6 @@
 import * as express from 'express'
 import * as builder from 'botbuilder'
-import * as axios from 'axios'
+import axios from 'axios'
 import { injectable, inject } from 'inversify'
 
 import TYPES from '../types'

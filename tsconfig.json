@@ -9,7 +9,7 @@
     "emitDecoratorMetadata": true,
     "lib": ["es6", "dom"],
     "allowUnreachableCode": true,
-    "outDir": "dist"
+    "outDir": "dist/"
   },
   "exclude": [
     "node_modules"
