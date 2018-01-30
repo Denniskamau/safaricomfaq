@@ -86,7 +86,7 @@ let BotController = class BotController {
                     next();
                 }),
                 (session) => {
-                    builder.Prompts.confirm(session, `Any other question that you have for us ${session.userData.name}`);
+                    builder.Prompts.text(session, `Any other question that you have for us ${session.userData.name}`);
                 },
                 (session, result) => {
                     if (result.response === 'yes') {
