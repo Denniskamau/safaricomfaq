@@ -24,10 +24,10 @@ let BotController = class BotController {
     constructor() {
         this.instructions = 'Welcome to the *Safom* bot. This will answer all FAQ questions from safaricom website';
         this.host = 'https://westus.api.cognitive.microsoft.com/qnamaker/v2.0';
-        this.path = `/knowledgebases/${process.env.QNA_SERVICE_ID}/generateAnswer`;
+        this.path = '/knowledgebases/43b22a33-6cde-49de-98d8-66257bcd6356/generateAnswer';
         this.connector = new builder.ChatConnector({
-            appId: process.env.MICROSOFT_APP_ID,
-            appPassword: process.env.MICROSOFT_APP_PASSWORD
+            appId: '242e9cab-03c9-4128-8913-16b6c6c85a05',
+            appPassword: 'lSt{Lb_!%d(K/!CZ'
         });
         this.bot = new builder.UniversalBot(this.connector);
         this.setupBot();
@@ -108,7 +108,7 @@ let BotController = class BotController {
                 url: `${this.host}${this.path}`,
                 method: 'POST',
                 headers: {
-                    'Ocp-Apim-Subscription-Key': `${process.env.QNA_SUBSCRIPTION_ID}`,
+                    'Ocp-Apim-Subscription-Key': '31366e4aba0d45818c2e8d4cb04b6909',
                     'Content-Type': 'application/json'
                 },
                 data: {
