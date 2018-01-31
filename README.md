@@ -49,3 +49,4 @@ $ yarn start:dev
   http://localhost:{port}/api/messages
   ```
 - Click on connect
+- You can now interact with the bot

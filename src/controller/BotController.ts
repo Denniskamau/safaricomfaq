@@ -114,6 +114,7 @@ export class BotController implements RegistrableController {
 				question
 			}
 		}
+		console.log(options)
 
 		try {
 			const { data } = await axios(options)

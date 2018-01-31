@@ -1,4 +1,5 @@
 
+require('dotenv').config()
 import * as express from 'express'
 import * as bodyParser from 'body-parser'
 import TYPES from './types'
