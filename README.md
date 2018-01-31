@@ -6,7 +6,8 @@ Node JS chatbot to interface with safaricom website frequently asked questions
 - Create a microsoft account that can be used to login to azure, and can access microsoft services - https://www.microsoft.com/en-us/.
 - Use that account to create a bot on https://dev.botframework.com/bots/provision.
 - Choose the first option, webchat bot, and fill in the required details
-- Please take note and record of the following:
+- In the bot template tab, choose node and basic template
+- After deployment, go to application settings and take note and record of the following:
 
   - ``` Microsoft App Id``` 
 
