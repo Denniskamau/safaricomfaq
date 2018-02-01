@@ -16,12 +16,17 @@ Node JS chatbot to interface with safaricom website frequently asked questions
   - Create a new service
   - Add a website endpoint for a FAQ page
   - Click on save and train
-  - Note the following
+  - Click on publish
+  - Note the following. In POST, in between knowledgebases and generate answer is the
     - ``` QNA_SERVICE_ID```
+  - The Ocp-Apim-Subscription-Key is the
     - ``` QNA_SUBSCRIPTION_ID```
+  - In the repo this will be entered in the .env
 
 ### Tools
 - Download bot emulator from https://github.com/Microsoft/BotFramework-Emulator/releases.
+- Install nodejs from https://nodejs.org/en/download/current/
+- Install yarn from https://yarnpkg.com/lang/en/docs/install/.
 
 ### Code
 - Clone the repo
@@ -33,6 +38,7 @@ $ git clone https://github.com/JamesNyamu/safaricomfaq.git
 - Add microsoft credentials and qna maker credentials on the .env file
 
 ### Application
+- Navigate to the root of the repo
 - Run
 ```
 $ yarn

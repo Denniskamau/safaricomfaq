@@ -96,7 +96,7 @@ export class BotController implements RegistrableController {
 					}
 					session.replaceDialog('faqQuestions', args)
 				} else {
-					session.endDialog(`Thanks ${session.userData.name}, we hope we have been able to be of service.`)
+					session.endDialog(`Thanks ${session.userData.name}, we hope we have been able to be of service. This conversation will be recorded under account ${session.phoneNumber.name}`)
 				}
 			}
 		])
@@ -114,7 +114,6 @@ export class BotController implements RegistrableController {
 				question
 			}
 		}
-		console.log(options)
 
 		try {
 			const { data } = await axios(options)
