@@ -1,16 +1,16 @@
 import { BotFramework, TwitterCron } from './app'
 
-const botFrameworkPort = 3000
+// const botFrameworkPort = 3000
 
-const botFramework = new BotFramework().express
+// const botFramework = new BotFramework().express
 
-botFramework.listen(botFrameworkPort, error => {
-  if (error) {
-    console.log(error)
-  }
+// botFramework.listen(botFrameworkPort, error => {
+//   if (error) {
+//     console.log(error)
+//   }
 
-  return console.log(`Bot Framework running on port ${botFrameworkPort}`)
-})
+//   return console.log(`Bot Framework running on port ${botFrameworkPort}`)
+// })
 
 const twitterCronPort = 3030
 

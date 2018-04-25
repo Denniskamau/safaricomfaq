@@ -6,23 +6,27 @@ import { injectable, inject } from 'inversify'
 import TYPES from '../types'
 
 import { RegistrableController } from './RegistrableController'
-import { hostname } from 'os'
+import { QnAMaker } from '../services/QnAMaker'
 
 @injectable()
 export class BotController implements RegistrableController {
-	private connector
-	private bot
-	private instructions = 'Welcome to the *Safom* bot. This will answer all FAQ questions from safaricom website'
-	private host = 'https://westus.api.cognitive.microsoft.com/qnamaker/v2.0'
-	private path = `/knowledgebases/${process.env.QNA_SERVICE_ID}/generateAnswer`
+	private connector: builder.ChatConnector
+	private bot: builder.UniversalBot
+
+	private qnaMaker: QnAMaker
+
+	private instructions: string = 'Welcome to the *Safom* bot. This will answer all FAQ questions from safaricom website'
+	private host: string = 'https://westus.api.cognitive.microsoft.com/qnamaker/v2.0'
+	private path: string = `/knowledgebases/${process.env.QNA_SERVICE_ID}/generateAnswer`
+
 
 	constructor() {
 		this.connector = new builder.ChatConnector({
 			appId: process.env.MICROSOFT_APP_ID,
 			appPassword: process.env.MICROSOFT_APP_PASSWORD
 		})
-
 		this.bot = new builder.UniversalBot(this.connector)
+		this.qnaMaker = new QnAMaker()
 
 		this.setupBot()
 	}
@@ -81,7 +85,7 @@ export class BotController implements RegistrableController {
 					builder.Prompts.text(session, 'What inquiry do you have?')
 			},
 			async (session, result, next) => {
-				const userQueryResponse = await this.getResponse(result.response)
+				const userQueryResponse = await this.qnaMaker.getResponse(result.response)
 
 				session.send(`${userQueryResponse}`)
 				next()
@@ -96,37 +100,9 @@ export class BotController implements RegistrableController {
 					}
 					session.replaceDialog('faqQuestions', args)
 				} else {
-					session.endDialog(`Thanks ${session.userData.name}, we hope we have been able to be of service. This conversation will be recorded under account ${session.phoneNumber.name}`)
+					session.endDialog(`Thanks ${session.userData.name}, we hope we have been able to be of service. This conversation will be recorded under account ${session.userData.phoneNumber}`)
 				}
 			}
 		])
-	}
-
-	private async getResponse(question: string): Promise<string> {
-		var options = {
-			url: `${this.host}${this.path}`,
-			method: 'POST',
-			headers: {
-				'Ocp-Apim-Subscription-Key': `${process.env.QNA_SUBSCRIPTION_ID}`,
-				'Content-Type': 'application/json'
-			},
-			data: {
-				question
-			}
-		}
-
-		try {
-			const { data } = await axios(options)
-
-			if (data.answers.length > 0) {
-				return data.answers[0].answer
-			}
-
-			return 'I cannot understand what you are saying'
-		} catch (error) {
-			console.log(error.response.data)
-
-			return 'Oops!! An error occured.'
-		}
 	}
 }

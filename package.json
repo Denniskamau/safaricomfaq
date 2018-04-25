@@ -23,7 +23,7 @@
     "inversify": "^4.9.0",
     "reflect-metadata": "^0.1.12",
     "ts-node": "^4.1.0",
-    "twitter": "^1.7.1",
+    "twit": "^2.2.9",
     "typescript": "^2.6.2",
     "winston": "^2.4.0"
   },
